@@ -1,0 +1,277 @@
+{
+  "name": "Mahima_SAS",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -64
+      ],
+      "id": "a8e31a94-dab2-4514-9d13-2a1b0065d17e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        -64
+      ],
+      "id": "8903abf4-02d2-4b97-bd0a-aa71ce932781",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        144
+      ],
+      "id": "b09b2cd2-6d1f-477a-be1c-a96c0a48b8eb",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        336,
+        -224
+      ],
+      "id": "d821780b-64d8-49d5-838a-6612bcee6923",
+      "name": "When chat message received",
+      "webhookId": "7af47565-6512-4c46-adc2-171480f90472"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        576,
+        -192
+      ],
+      "id": "d28f2269-7075-4c33-b1b6-84827d791b77",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        816,
+        32
+      ],
+      "id": "20ebec27-20b2-4307-a792-8a8c407c2d80",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Answer user's question of loan approval based on given values: bureau score, Fixed Obligations to Income Ratio (FOIR), Loan-to-Value (LTV), loan tenor, and applicant age at maturity based on given conditions in the document approve the loan or reject it",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        1008,
+        -160
+      ],
+      "id": "c2fa46ea-aebd-47fb-b1c8-9d06064c6b82",
+      "name": "Simple Vector Store1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1jlDSdOiprUgXOQ6Bl7z09ilWjrgzuJRH",
+          "mode": "list",
+          "cachedResultName": "Credit_Appraisal_Policy_RAG_Reference (1).docx",
+          "cachedResultUrl": "https://docs.google.com/document/d/1jlDSdOiprUgXOQ6Bl7z09ilWjrgzuJRH/edit?usp=drivesdk&ouid=108386399587200591174&rtpof=true&sd=true"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        32,
+        -64
+      ],
+      "id": "a878b31b-e81f-4066-a8fd-666e87b53329",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "8X8MXFAvkIkJ68dL",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        144,
+        160
+      ],
+      "id": "3be3465a-9211-495c-8b4d-c5cc019a431b",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "HNHVyyghfEVUJoWA",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        624,
+        48
+      ],
+      "id": "4691e11f-3706-4f5c-ac04-0a508bb4814e",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "RVg3JnkZXPLHchCI",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6eaf2287-36b8-40a0-99b0-370a656655ae",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f09a7c5a47a0530f214a381f625385bed48250bbc5c3a3174491ef8e83f5958d"
+  },
+  "nodeGroups": [],
+  "id": "8hSJ3w4zVnpNR8pM",
+  "tags": []
+}
